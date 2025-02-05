@@ -29,9 +29,10 @@ const ShippingCalculator = () => {
       insuranceRate = 10000 * 0.02;
     }
     
-    const roundedInsurance = parseFloat(insuranceRate.toFixed(2));
-    const decimalPart = parseFloat((insuranceRate % 1).toFixed(2));
-    return decimalPart >= 0.05 ? Math.ceil(roundedInsurance * 100) / 100 : roundedInsurance;
+    // Precise decimal handling
+    const baseRounded = parseFloat(insuranceRate.toFixed(2));
+    const decimalPart = parseFloat(((insuranceRate - baseRounded) * 100).toFixed(0));
+    return decimalPart >= 5 ? Math.ceil(baseRounded * 100) / 100 : baseRounded;
   };
 
   const getChargeableWeight = () => {
@@ -151,7 +152,7 @@ const ShippingCalculator = () => {
             </select>
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-4 gap-4">
           <div>
             <label className="block text-base font-bold text-gray-900 mb-1">Alto (cm)</label>
             <input
@@ -185,17 +186,17 @@ const ShippingCalculator = () => {
               className="w-full p-2 border rounded text-gray-900 font-medium bg-white"
             />
           </div>
-        </div>
-        <div>
-          <label className="block text-base font-bold text-gray-900 mb-1">Peso (kg)</label>
-          <input
-            type="number"
-            min="0.1"
-            step="0.1"
-            value={weight}
-            onChange={(e) => setWeight(parseFloat(e.target.value))}
-            className="w-full p-2 border rounded text-gray-900 font-medium bg-white"
-          />
+          <div>
+            <label className="block text-base font-bold text-gray-900 mb-1">Peso (kg)</label>
+            <input
+              type="number"
+              min="0.1"
+              step="0.1"
+              value={weight}
+              onChange={(e) => setWeight(parseFloat(e.target.value))}
+              className="w-full p-2 border rounded text-gray-900 font-medium bg-white"
+            />
+          </div>
         </div>
         <div className="mt-4">
           <label className="block text-base font-bold text-gray-900 mb-1">Valor Declarado (S/)</label>
