@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 const ShippingCalculator = () => {
   const [rateData, setRateData] = useState([]);
@@ -114,19 +115,15 @@ const ShippingCalculator = () => {
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       <div className="flex items-center justify-between mb-6">
         <img 
-          src="https://i.ibb.co/PZs5J80Q/logo-left-png.png"
-          alt="Logo Izquierdo"
-          width={32}
-          height={32}
-          className="object-contain"
+          src="/logo-left.png" 
+          alt="Logo Izquierdo" 
+          className="h-8 w-auto" // Reducido de h-12 a h-8
         />
         <h1 className="text-2xl font-bold text-gray-900">Cotizador OLVA</h1>
         <img 
-          src="https://i.ibb.co/7djJ1r7c/logo-right-png.png"
-          alt="Logo Derecho"
-          width={32}
-          height={32}
-          className="object-contain"
+          src="/logo-right.png" 
+          alt="Logo Derecho" 
+          className="h-8 w-auto" // Reducido de h-12 a h-8
         />
       </div>
       
