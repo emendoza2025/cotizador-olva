@@ -22,23 +22,31 @@ const ShippingCalculator = () => {
     let insuranceRate;
     if (declaredValue <= 2999) {
       // 0.6 soles por cada 100 soles + IGV
-      insuranceRate = (Math.ceil(declaredValue / 100) * 0.6) * 1.18;
+      // Primero calculamos cuántos grupos de 100 hay
+      const groups = Math.ceil(declaredValue / 100);
+      // Luego multiplicamos por 0.6 y por IGV (1.18)
+      insuranceRate = groups * 0.6 * 1.18;
+      
+      // Convertimos a string con 4 decimales para capturar el tercer decimal exacto
+      const rateStr = insuranceRate.toFixed(4);
+      // Obtenemos el tercer decimal
+      const thirdDecimal = parseInt(rateStr.charAt(4));
+      
+      // Si el tercer decimal es 5 o mayor, redondeamos hacia arriba
+      // si es menor, truncamos a 2 decimales
+      const twoDecimalStr = rateStr.substring(0, 4); // Tomamos hasta el segundo decimal
+      return thirdDecimal >= 5 ? 
+        (Math.ceil(parseFloat(twoDecimalStr) * 100) / 100) :
+        parseFloat(twoDecimalStr);
+        
     } else if (declaredValue <= 10000) {
       insuranceRate = declaredValue * 0.02;
     } else {
       insuranceRate = 10000 * 0.02;
     }
     
-    // Obtenemos el tercer decimal
-    const threeDecimals = insuranceRate.toFixed(3);
-    const thirdDecimal = parseInt(threeDecimals.charAt(threeDecimals.length - 1));
-    
-    // Si el tercer decimal es 5 o mayor, redondeamos hacia arriba
-    if (thirdDecimal >= 5) {
-      return Math.ceil(insuranceRate * 100) / 100;
-    } else {
-      return Math.floor(insuranceRate * 100) / 100;
-    }
+    return parseFloat(insuranceRate.toFixed(2));
+  };
   };
 
   const getChargeableWeight = () => {
