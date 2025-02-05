@@ -21,6 +21,7 @@ const ShippingCalculator = () => {
     
     let insuranceRate;
     if (declaredValue <= 2999) {
+      // 0.6 soles por cada 100 soles + IGV
       insuranceRate = (Math.ceil(declaredValue / 100) * 0.6) * 1.18;
     } else if (declaredValue <= 10000) {
       insuranceRate = declaredValue * 0.02;
@@ -28,7 +29,6 @@ const ShippingCalculator = () => {
       insuranceRate = 10000 * 0.02;
     }
     
-    // Improved rounding logic
     const roundedInsurance = parseFloat(insuranceRate.toFixed(2));
     const decimalPart = parseFloat((insuranceRate % 1).toFixed(2));
     return decimalPart >= 0.05 ? Math.ceil(roundedInsurance * 100) / 100 : roundedInsurance;
@@ -151,7 +151,7 @@ const ShippingCalculator = () => {
             </select>
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div>
             <label className="block text-base font-bold text-gray-900 mb-1">Alto (cm)</label>
             <input
@@ -185,17 +185,17 @@ const ShippingCalculator = () => {
               className="w-full p-2 border rounded text-gray-900 font-medium bg-white"
             />
           </div>
-          <div>
-            <label className="block text-base font-bold text-gray-900 mb-1">Peso (kg)</label>
-            <input
-              type="number"
-              min="0.1"
-              step="0.1"
-              value={weight}
-              onChange={(e) => setWeight(parseFloat(e.target.value))}
-              className="w-full p-2 border rounded text-gray-900 font-medium bg-white"
-            />
-          </div>
+        </div>
+        <div>
+          <label className="block text-base font-bold text-gray-900 mb-1">Peso (kg)</label>
+          <input
+            type="number"
+            min="0.1"
+            step="0.1"
+            value={weight}
+            onChange={(e) => setWeight(parseFloat(e.target.value))}
+            className="w-full p-2 border rounded text-gray-900 font-medium bg-white"
+          />
         </div>
         <div className="mt-4">
           <label className="block text-base font-bold text-gray-900 mb-1">Valor Declarado (S/)</label>
