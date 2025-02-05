@@ -29,13 +29,12 @@ const ShippingCalculator = () => {
       insuranceRate = 10000 * 0.02;
     }
     
-    // Correcto manejo de decimales
-    const multiplier = Math.pow(10, 3); // Trabajamos con 3 decimales para tomar la decisión
-    const threeDecimals = Math.round(insuranceRate * multiplier);
-    const lastDigit = threeDecimals % 10;
+    // Obtenemos el tercer decimal
+    const threeDecimals = insuranceRate.toFixed(3);
+    const thirdDecimal = parseInt(threeDecimals.charAt(threeDecimals.length - 1));
     
     // Si el tercer decimal es 5 o mayor, redondeamos hacia arriba
-    if (lastDigit >= 5) {
+    if (thirdDecimal >= 5) {
       return Math.ceil(insuranceRate * 100) / 100;
     } else {
       return Math.floor(insuranceRate * 100) / 100;
