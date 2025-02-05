@@ -7,44 +7,35 @@ const ShippingCalculator = () => {
   const [selectedDist, setSelectedDist] = useState('');
   const [weight, setWeight] = useState(1);
   const [loading, setLoading] = useState(true);
-  
-  // Nuevos estados para dimensiones y valor declarado
   const [length, setLength] = useState(0);
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const [declaredValue, setDeclaredValue] = useState(0);
 
-  // Calcular peso volumétrico
   const calculateVolumetricWeight = () => {
     return (length * width * height) / 6000;
   };
 
-  // Calcular seguro
   const calculateInsurance = () => {
     if (declaredValue <= 0) return 0;
     
     let insuranceRate;
     if (declaredValue <= 2999) {
-      // 0.6% + IGV
-      insuranceRate = (declaredValue * 0.6 / 100) * 1.18;
+      // 0.6 soles por cada 100 soles + IGV
+      insuranceRate = (Math.ceil(declaredValue / 100) * 0.6) * 1.18;
     } else if (declaredValue <= 10000) {
-      // 2%
       insuranceRate = declaredValue * 0.02;
     } else {
-      // Máximo valor asegurable
       insuranceRate = 10000 * 0.02;
     }
     
-    // Redondeo según regla del .5
     return Math.round(insuranceRate * 100) / 100;
   };
 
-  // Obtener el peso a cobrar (el mayor entre peso real y volumétrico)
   const getChargeableWeight = () => {
     const volumetricWeight = calculateVolumetricWeight();
     const maxWeight = Math.max(weight, volumetricWeight);
     const decimal = maxWeight % 1;
-    // Redondeo especial: < 0.5 hacia abajo, >= 0.5 hacia arriba
     return decimal < 0.5 ? Math.floor(maxWeight) : Math.ceil(maxWeight);
   };
 
@@ -73,22 +64,8 @@ const ShippingCalculator = () => {
   }, []);
 
   const departments = [...new Set(rateData.map(item => item.Departamento))].sort();
-  
-  const provinces = selectedDept 
-    ? [...new Set(rateData
-        .filter(item => item.Departamento === selectedDept)
-        .map(item => item.Provincia))].sort()
-    : [];
-  
-  const districts = (selectedDept && selectedProv)
-    ? rateData
-        .filter(item => 
-          item.Departamento === selectedDept && 
-          item.Provincia === selectedProv
-        )
-        .map(item => item.Distrito)
-        .sort()
-    : [];
+  const provinces = selectedDept ? [...new Set(rateData.filter(item => item.Departamento === selectedDept).map(item => item.Provincia))].sort() : [];
+  const districts = (selectedDept && selectedProv) ? rateData.filter(item => item.Departamento === selectedDept && item.Provincia === selectedProv).map(item => item.Distrito).sort() : [];
 
   const calculateShipping = () => {
     if (!selectedDept || !selectedProv || !selectedDist) return null;
@@ -179,54 +156,50 @@ const ShippingCalculator = () => {
           </div>
         </div>
 
-        {/* Dimensiones en una sola fila */}
-        <div className="grid grid-cols-1 gap-4">
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="text-sm font-bold text-black mb-3">Dimensiones y Peso</h3>
-            <div className="grid grid-cols-4 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-black mb-1">Alto (cm)</label>
-                <input
-                  type="number"
-                  min="0"
-                  value={height}
-                  onChange={(e) => setHeight(parseFloat(e.target.value) || 0)}
-                  className="w-full p-2 border rounded text-black text-sm bg-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-black mb-1">Largo (cm)</label>
-                <input
-                  type="number"
-                  min="0"
-                  value={length}
-                  onChange={(e) => setLength(parseFloat(e.target.value) || 0)}
-                  className="w-full p-2 border rounded text-black text-sm bg-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-black mb-1">Ancho (cm)</label>
-                <input
-                  type="number"
-                  min="0"
-                  value={width}
-                  onChange={(e) => setWidth(parseFloat(e.target.value) || 0)}
-                  className="w-full p-2 border rounded text-black text-sm bg-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-black mb-1">Peso (kg)</label>
-                <input
-                  type="number"
-                  min="0.1"
-                  step="0.1"
-                  value={weight}
-                  onChange={(e) => setWeight(parseFloat(e.target.value))}
-                  className="w-full p-2 border rounded text-black text-sm bg-white"
-                />
-              </div>
-            </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+          <div>
+            <label className="block text-base font-bold text-gray-900 mb-1">Alto (cm)</label>
+            <input
+              type="number"
+              min="0"
+              step="1"
+              value={height}
+              onChange={(e) => setHeight(parseFloat(e.target.value) || 0)}
+              className="w-full p-2 border rounded text-gray-900 font-medium bg-white"
+            />
           </div>
+          <div>
+            <label className="block text-base font-bold text-gray-900 mb-1">Largo (cm)</label>
+            <input
+              type="number"
+              min="0"
+              step="1"
+              value={length}
+              onChange={(e) => setLength(parseFloat(e.target.value) || 0)}
+              className="w-full p-2 border rounded text-gray-900 font-medium bg-white"
+            />
+          </div>
+          <div>
+            <label className="block text-base font-bold text-gray-900 mb-1">Ancho (cm)</label>
+            <input
+              type="number"
+              min="0"
+              step="1"
+              value={width}
+              onChange={(e) => setWidth(parseFloat(e.target.value) || 0)}
+              className="w-full p-2 border rounded text-gray-900 font-medium bg-white"
+            />
+          </div>
+          <div>
+            <label className="block text-base font-bold text-gray-900 mb-1">Peso (kg)</label>
+            <input
+              type="number"
+              min="0.1"
+              step="0.1"
+              value={weight}
+              onChange={(e) => setWeight(parseFloat(e.target.value))}
+              className="w-full p-2 border rounded text-gray-900 font-medium bg-white"
+            />
           </div>
         </div>
 
@@ -244,17 +217,17 @@ const ShippingCalculator = () => {
 
         {total && (
           <div className="mt-6 p-4 bg-blue-50 rounded-lg space-y-2">
-            <h3 className="text-lg font-bold text-gray-900">Resumen de Costos</h3>
+            <h3 className="text-lg font-bold text-black">Resumen de Costos</h3>
             
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <p><span className="font-medium">Peso Físico:</span> {weight} kg</p>
-                <p><span className="font-medium">Peso Volumétrico:</span> {volumetricWeight.toFixed(2)} kg</p>
-                <p><span className="font-medium">Peso a Cobrar:</span> {getChargeableWeight().toFixed(2)} kg</p>
+                <p><span className="font-medium text-black">Peso Físico:</span> <span className="text-black">{weight} kg</span></p>
+                <p><span className="font-medium text-black">Peso Volumétrico:</span> <span className="text-black">{volumetricWeight.toFixed(2)} kg</span></p>
+                <p><span className="font-medium text-black">Peso a Cobrar:</span> <span className="text-black">{getChargeableWeight()} kg</span></p>
               </div>
               <div>
-                <p><span className="font-medium">Costo Envío:</span> S/ {total.shipping.toFixed(2)}</p>
-                <p><span className="font-medium">Seguro:</span> S/ {total.insurance.toFixed(2)}</p>
+                <p><span className="font-medium text-black">Costo Envío:</span> <span className="text-black">S/ {total.shipping.toFixed(2)}</span></p>
+                <p><span className="font-medium text-black">Seguro:</span> <span className="text-black">S/ {total.insurance.toFixed(2)}</span></p>
                 <p className="text-lg font-bold text-blue-600">Total: S/ {total.total.toFixed(2)}</p>
               </div>
             </div>
