@@ -19,27 +19,20 @@ const ShippingCalculator = () => {
   const calculateInsurance = () => {
     if (declaredValue <= 0) return 0;
     
-    let base;
     if (declaredValue <= 2999) {
-      // Calculamos cuántos grupos de 100
-      const groups = Math.ceil(declaredValue / 100);
-      // 0.6 soles por grupo + IGV
-      base = groups * 0.6 * 1.18;
-      // Forzamos a 3 decimales para evaluar el redondeo
-      const withDecimals = (base * 1000).toFixed(0);
-      const lastDigit = withDecimals % 10;
-      
-      // Si el último dígito es 5 o mayor, redondeamos arriba
-      if (lastDigit >= 5) {
-        return Math.ceil(base * 100) / 100;
-      }
-      // Si es menor a 5, redondeamos abajo
-      return Math.floor(base * 100) / 100;
-    } else if (declaredValue <= 10000) {
+      // Para valores menores a 2999, usamos la fórmula de 0.6 por cada 100
+      const grupos = Math.ceil(declaredValue / 100);
+      const seguro = grupos * 0.6 * 1.18;
+      // Tomamos solo 2 decimales redondeando hacia abajo
+      return Math.floor(seguro * 100) / 100;
+    } 
+    
+    // Para valores mayores, simplemente es 2%
+    if (declaredValue <= 10000) {
       return declaredValue * 0.02;
-    } else {
-      return 10000 * 0.02;
     }
+    
+    return 10000 * 0.02;
   };
 
   const getChargeableWeight = () => {
