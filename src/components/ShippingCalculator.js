@@ -20,12 +20,22 @@ const ShippingCalculator = () => {
     if (declaredValue <= 0) return 0;
     
     if (declaredValue <= 2999) {
-      // Primero multiplicamos por 0.6 y dividimos entre 100
+      // Calculamos el seguro base
       const baseSeguro = (declaredValue * 0.6) / 100;
-      // Luego aplicamos el IGV
       const conIGV = baseSeguro * 1.18;
-      // Si el tercer decimal es menor a 5, redondeamos hacia abajo
-      return Math.floor(conIGV * 100) / 100;
+      
+      // Convertimos a string para obtener exactamente el tercer decimal
+      const numStr = conIGV.toFixed(3);
+      const [entero, decimal] = numStr.split('.');
+      
+      // Si el tercer decimal es menor a 5, mantenemos dos decimales
+      // Si es 5 o mayor, redondeamos hacia arriba
+      if (parseInt(decimal[2]) >= 5) {
+        const temp = parseInt(decimal.substring(0, 2)) + 1;
+        return parseFloat(`${entero}.${temp.toString().padStart(2, '0')}`);
+      } else {
+        return parseFloat(`${entero}.${decimal.substring(0, 2)}`);
+      }
     } 
     
     if (declaredValue <= 10000) {
