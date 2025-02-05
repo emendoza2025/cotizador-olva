@@ -29,10 +29,17 @@ const ShippingCalculator = () => {
       insuranceRate = 10000 * 0.02;
     }
     
-    // Precise decimal handling
-    const baseRounded = parseFloat(insuranceRate.toFixed(2));
-    const decimalPart = parseFloat(((insuranceRate - baseRounded) * 100).toFixed(0));
-    return decimalPart >= 5 ? Math.ceil(baseRounded * 100) / 100 : baseRounded;
+    // Correcto manejo de decimales
+    const multiplier = Math.pow(10, 3); // Trabajamos con 3 decimales para tomar la decisión
+    const threeDecimals = Math.round(insuranceRate * multiplier);
+    const lastDigit = threeDecimals % 10;
+    
+    // Si el tercer decimal es 5 o mayor, redondeamos hacia arriba
+    if (lastDigit >= 5) {
+      return Math.ceil(insuranceRate * 100) / 100;
+    } else {
+      return Math.floor(insuranceRate * 100) / 100;
+    }
   };
 
   const getChargeableWeight = () => {
@@ -71,12 +78,15 @@ const ShippingCalculator = () => {
 
   const calculateShipping = () => {
     if (!selectedDept || !selectedProv || !selectedDist) return null;
+    
     const rate = rateData.find(item =>
       item.Departamento === selectedDept &&
       item.Provincia === selectedProv &&
       item.Distrito === selectedDist
     );
+
     if (!rate) return null;
+
     const chargeableWeight = getChargeableWeight();
     const basePrice = rate['Precio por envío de caja de 1 kilo (inc IGV)'];
     const excessWeight = Math.max(0, chargeableWeight - 1);
