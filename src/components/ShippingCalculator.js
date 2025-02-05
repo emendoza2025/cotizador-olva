@@ -20,14 +20,14 @@ const ShippingCalculator = () => {
     if (declaredValue <= 0) return 0;
     
     if (declaredValue <= 2999) {
-      // Para valores menores a 2999, usamos la fórmula de 0.6 por cada 100
-      const grupos = Math.ceil(declaredValue / 100);
-      const seguro = grupos * 0.6 * 1.18;
-      // Tomamos solo 2 decimales redondeando hacia abajo
-      return Math.floor(seguro * 100) / 100;
+      // Primero multiplicamos por 0.6 y dividimos entre 100
+      const baseSeguro = (declaredValue * 0.6) / 100;
+      // Luego aplicamos el IGV
+      const conIGV = baseSeguro * 1.18;
+      // Si el tercer decimal es menor a 5, redondeamos hacia abajo
+      return Math.floor(conIGV * 100) / 100;
     } 
     
-    // Para valores mayores, simplemente es 2%
     if (declaredValue <= 10000) {
       return declaredValue * 0.02;
     }
