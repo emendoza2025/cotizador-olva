@@ -21,7 +21,6 @@ const ShippingCalculator = () => {
     
     let insuranceRate;
     if (declaredValue <= 2999) {
-      // 0.6 soles por cada 100 soles + IGV
       insuranceRate = (Math.ceil(declaredValue / 100) * 0.6) * 1.18;
     } else if (declaredValue <= 10000) {
       insuranceRate = declaredValue * 0.02;
@@ -29,7 +28,10 @@ const ShippingCalculator = () => {
       insuranceRate = 10000 * 0.02;
     }
     
-    return Math.round(insuranceRate * 100) / 100;
+    // Improved rounding logic
+    const roundedInsurance = parseFloat(insuranceRate.toFixed(2));
+    const decimalPart = parseFloat((insuranceRate % 1).toFixed(2));
+    return decimalPart >= 0.05 ? Math.ceil(roundedInsurance * 100) / 100 : roundedInsurance;
   };
 
   const getChargeableWeight = () => {
@@ -59,7 +61,6 @@ const ShippingCalculator = () => {
         setLoading(false);
       }
     };
-
     loadData();
   }, []);
 
@@ -69,15 +70,12 @@ const ShippingCalculator = () => {
 
   const calculateShipping = () => {
     if (!selectedDept || !selectedProv || !selectedDist) return null;
-
     const rate = rateData.find(item =>
       item.Departamento === selectedDept &&
       item.Provincia === selectedProv &&
       item.Distrito === selectedDist
     );
-
     if (!rate) return null;
-
     const chargeableWeight = getChargeableWeight();
     const basePrice = rate['Precio por envío de caja de 1 kilo (inc IGV)'];
     const excessWeight = Math.max(0, chargeableWeight - 1);
@@ -121,7 +119,6 @@ const ShippingCalculator = () => {
               ))}
             </select>
           </div>
-
           <div>
             <label className="block text-base font-bold text-gray-900 mb-1">Provincia</label>
             <select 
@@ -139,7 +136,6 @@ const ShippingCalculator = () => {
               ))}
             </select>
           </div>
-
           <div>
             <label className="block text-base font-bold text-gray-900 mb-1">Distrito</label>
             <select 
@@ -155,7 +151,6 @@ const ShippingCalculator = () => {
             </select>
           </div>
         </div>
-
         <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
           <div>
             <label className="block text-base font-bold text-gray-900 mb-1">Alto (cm)</label>
@@ -202,7 +197,6 @@ const ShippingCalculator = () => {
             />
           </div>
         </div>
-
         <div className="mt-4">
           <label className="block text-base font-bold text-gray-900 mb-1">Valor Declarado (S/)</label>
           <input
@@ -214,7 +208,6 @@ const ShippingCalculator = () => {
             className="w-full p-2 border rounded text-gray-900 font-medium bg-white"
           />
         </div>
-
         {total && (
           <div className="mt-6 p-4 bg-blue-50 rounded-lg space-y-2">
             <h3 className="text-lg font-bold text-black">Resumen de Costos</h3>
