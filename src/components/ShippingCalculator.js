@@ -179,50 +179,54 @@ const ShippingCalculator = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          <div>
-            <label className="block text-base font-bold text-gray-900 mb-1">Alto (cm)</label>
-            <input
-              type="number"
-              min="0"
-              step="1"
-              value={height}
-              onChange={(e) => setHeight(parseFloat(e.target.value) || 0)}
-              className="w-full p-2 border rounded text-gray-900 font-medium bg-white"
-            />
+        {/* Dimensiones en una sola fila */}
+        <div className="grid grid-cols-1 gap-4">
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h3 className="text-sm font-bold text-black mb-3">Dimensiones y Peso</h3>
+            <div className="grid grid-cols-4 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-black mb-1">Alto (cm)</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={height}
+                  onChange={(e) => setHeight(parseFloat(e.target.value) || 0)}
+                  className="w-full p-2 border rounded text-black text-sm bg-white"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-black mb-1">Largo (cm)</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={length}
+                  onChange={(e) => setLength(parseFloat(e.target.value) || 0)}
+                  className="w-full p-2 border rounded text-black text-sm bg-white"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-black mb-1">Ancho (cm)</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={width}
+                  onChange={(e) => setWidth(parseFloat(e.target.value) || 0)}
+                  className="w-full p-2 border rounded text-black text-sm bg-white"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-black mb-1">Peso (kg)</label>
+                <input
+                  type="number"
+                  min="0.1"
+                  step="0.1"
+                  value={weight}
+                  onChange={(e) => setWeight(parseFloat(e.target.value))}
+                  className="w-full p-2 border rounded text-black text-sm bg-white"
+                />
+              </div>
+            </div>
           </div>
-          <div>
-            <label className="block text-base font-bold text-gray-900 mb-1">Largo (cm)</label>
-            <input
-              type="number"
-              min="0"
-              step="1"
-              value={length}
-              onChange={(e) => setLength(parseFloat(e.target.value) || 0)}
-              className="w-full p-2 border rounded text-gray-900 font-medium bg-white"
-            />
-          </div>
-          <div>
-            <label className="block text-base font-bold text-gray-900 mb-1">Ancho (cm)</label>
-            <input
-              type="number"
-              min="0"
-              step="1"
-              value={width}
-              onChange={(e) => setWidth(parseFloat(e.target.value) || 0)}
-              className="w-full p-2 border rounded text-gray-900 font-medium bg-white"
-            />
-          </div>
-          <div>
-            <label className="block text-base font-bold text-gray-900 mb-1">Peso (kg)</label>
-            <input
-              type="number"
-              min="0.1"
-              step="0.1"
-              value={weight}
-              onChange={(e) => setWeight(parseFloat(e.target.value))}
-              className="w-full p-2 border rounded text-gray-900 font-medium bg-white"
-            />
           </div>
         </div>
 
